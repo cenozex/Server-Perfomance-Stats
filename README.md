@@ -4,7 +4,6 @@
 
 ![Bash](https://img.shields.io/badge/Language-Bash-4EAA25?style=flat-square&logo=gnubash&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Linux-FCC624?style=flat-square&logo=linux&logoColor=black)
-![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
 ![Version](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square)
 
 ---
@@ -119,16 +118,10 @@ Generated: 2026-xx-xx 20:29:11 +05xx
 
 ## 🚀 Quick Start
 
-### 1. Download the script
+### clone the repository:
 
 ```bash
-curl -O https://your-repo-url/server-stats.sh
-```
-
-Or clone the repository:
-
-```bash
-git clone https://github.com/yourusername/server-stats.git
+git clone https://github.com/cenozex/Server-Perfomance-Stats.git
 cd server-stats
 ```
 
@@ -256,30 +249,6 @@ server-stats/
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Here's how to get started:
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/add-gpu-stats`
-3. Make your changes and test on a Linux system
-4. Commit with a clear message: `git commit -m "feat: add GPU usage section"`
-5. Push and open a Pull Request
-
-### Ideas for contributions
-- GPU usage stats (nvidia-smi / AMD ROCm)
-- Docker container stats
-- Temperature monitoring
-- I/O wait and disk read/write speed
-- Bandwidth usage per interface
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** — you are free to use, modify, and distribute it for any purpose.
-
----
 
 ## 👤 Author
 
