@@ -122,7 +122,7 @@ Generated: 2026-xx-xx 20:29:11 +05xx
 
 ```bash
 git clone https://github.com/cenozex/Server-Perfomance-Stats.git
-cd server-stats
+cd Server-Perfomance-Stats
 ```
 
 ### 2. Make it executable
