@@ -204,3 +204,19 @@ else
   echo "  Auth log not accessible (may require root)."
 fi
 echo ""
+
+# ── NETWORK INTERFACES ────────────────────────────────
+header "NETWORK INTERFACES"
+
+if command -v ip &>/dev/null; then
+  ip -br addr show | awk '{printf "  %-15s %-12s %s\n", $1, $2, $3}'
+else
+  ifconfig 2>/dev/null | grep -E "^[a-z]|inet " | awk '{print "  " $0}'
+fi
+echo ""
+
+# ── FOOTER ────────────────────────────────────────────
+echo -e "${BOLD}${GREEN}╔════════════════════════════════════════════════════╗${RESET}"
+echo -e "${BOLD}${GREEN}║                  END OF REPORT                     ║${RESET}"
+echo -e "${BOLD}${GREEN}╚════════════════════════════════════════════════════╝${RESET}"
+echo ""
