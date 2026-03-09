@@ -172,3 +172,35 @@ ps aux --sort=-%mem 2>/dev/null \
     }' \
   | head -5
 echo ""
+
+
+
+# ── LOGGED IN USERS ───────────────────────────────────
+header "LOGGED IN USERS"
+
+USER_COUNT=$(who | wc -l)
+printf "  Active sessions: %s\n\n" "$USER_COUNT"
+who | awk '{printf "  %-15s %-10s %s %s\n", $1, $2, $3, $4}'
+echo ""
+
+# ── FAILED LOGIN ATTEMPTS ─────────────────────────────
+header "FAILED LOGIN ATTEMPTS (last 10)"
+
+if [ -f /var/log/auth.log ]; then
+  FAIL_COUNT=$(grep -c "Failed password" /var/log/auth.log 2>/dev/null || echo "0")
+  printf "  Total failed attempts: ${RED}%s${RESET}\n\n" "$FAIL_COUNT"
+  grep "Failed password" /var/log/auth.log 2>/dev/null \
+    | tail -10 \
+    | awk '{print "  " $0}' \
+    || echo "  None found."
+elif [ -f /var/log/secure ]; then
+  FAIL_COUNT=$(grep -c "Failed password" /var/log/secure 2>/dev/null || echo "0")
+  printf "  Total failed attempts: ${RED}%s${RESET}\n\n" "$FAIL_COUNT"
+  grep "Failed password" /var/log/secure 2>/dev/null \
+    | tail -10 \
+    | awk '{print "  " $0}' \
+    || echo "  None found."
+else
+  echo "  Auth log not accessible (may require root)."
+fi
+echo ""
