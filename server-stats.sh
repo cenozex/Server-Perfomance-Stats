@@ -79,7 +79,7 @@ printf "  %-20s %s\n" "Cores:"    "$CPU_CORES"
 printf "  %-20s ${RED}%s%%${RESET}\n" "Usage:" "$CPU_USED"
 
 
-# Visual bar
+# Visual bar -> To get clear view of memory in the form of bar
 BAR_FILLED=$(awk "BEGIN {printf \"%d\", ${CPU_USED}/2}")
 BAR_EMPTY=$((50 - BAR_FILLED))
 printf "  %-20s [" ""; 
@@ -123,4 +123,22 @@ echo "]"
 
 echo ""
 printf "  %-20s %s MB total, %s MB used (%s%%)\n" "Swap:" "$SWAP_TOTAL" "$SWAP_USED" "$SWAP_PCT"
+echo ""
+
+
+# ── DISK USAGE ────────────────────────────────────────
+header "DISK USAGE"
+
+printf "  %-25s %8s %8s %8s %6s\n" "Filesystem" "Total" "Used" "Free" "Use%"
+divider
+df -h --output=source,size,used,avail,pcent,target 2>/dev/null \
+  | grep -E '^/dev/' \
+  | while read -r src size used avail pct mount; do
+      PCT_NUM=${pct/\%/}
+      if   [ "$PCT_NUM" -ge 90 ] 2>/dev/null; then COLOR=$RED
+      elif [ "$PCT_NUM" -ge 70 ] 2>/dev/null; then COLOR=$YELLOW
+      else COLOR=$GREEN; fi
+      printf "  %-25s %8s %8s %8s ${COLOR}%6s${RESET}  %s\n" \
+        "$src" "$size" "$used" "$avail" "$pct" "$mount"
+    done
 echo ""
