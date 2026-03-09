@@ -87,3 +87,40 @@ printf "${RED}%0.s█${RESET}" $(seq 1 $BAR_FILLED) 2>/dev/null
 printf "%0.s░" $(seq 1 $BAR_EMPTY) 2>/dev/null
 echo "]"
 echo ""
+
+
+
+# ── MEMORY USAGE ──────────────────────────────────────
+header "MEMORY USAGE"
+
+MEM_TOTAL=$(free -m | awk '/^Mem:/{print $2}')
+MEM_USED=$(free -m  | awk '/^Mem:/{print $3}')
+MEM_FREE=$(free -m  | awk '/^Mem:/{print $4}')
+MEM_AVAIL=$(free -m | awk '/^Mem:/{print $7}')
+MEM_PCT=$(awk "BEGIN {printf \"%.1f\", ($MEM_USED/$MEM_TOTAL)*100}")
+
+SWAP_TOTAL=$(free -m | awk '/^Swap:/{print $2}')
+SWAP_USED=$(free -m  | awk '/^Swap:/{print $3}')
+SWAP_FREE=$(free -m  | awk '/^Swap:/{print $4}')
+if [ "$SWAP_TOTAL" -gt 0 ]; then
+  SWAP_PCT=$(awk "BEGIN {printf \"%.1f\", ($SWAP_USED/$SWAP_TOTAL)*100}")
+else
+  SWAP_PCT="0.0"
+fi
+
+printf "  %-20s %s MB\n"              "Total:"     "$MEM_TOTAL"
+printf "  %-20s %s MB\n"              "Used:"      "$MEM_USED"
+printf "  %-20s %s MB\n"              "Free:"      "$MEM_FREE"
+printf "  %-20s %s MB\n"              "Available:" "$MEM_AVAIL"
+printf "  %-20s ${RED}%s%%${RESET}\n" "Usage %:"   "$MEM_PCT"
+
+BAR_FILLED=$(awk "BEGIN {printf \"%d\", ${MEM_PCT}/2}")
+BAR_EMPTY=$((50 - BAR_FILLED))
+printf "  %-20s [" ""
+printf "${RED}%0.s█${RESET}" $(seq 1 $BAR_FILLED) 2>/dev/null
+printf "%0.s░" $(seq 1 $BAR_EMPTY) 2>/dev/null
+echo "]"
+
+echo ""
+printf "  %-20s %s MB total, %s MB used (%s%%)\n" "Swap:" "$SWAP_TOTAL" "$SWAP_USED" "$SWAP_PCT"
+echo ""
