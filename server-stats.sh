@@ -142,3 +142,33 @@ df -h --output=source,size,used,avail,pcent,target 2>/dev/null \
         "$src" "$size" "$used" "$avail" "$pct" "$mount"
     done
 echo ""
+
+
+
+# ── TOP 5 PROCESSES — CPU ─────────────────────────────
+header "TOP 5 PROCESSES BY CPU USAGE"
+
+printf "  %-8s %-22s %-8s %-8s %s\n" "PID" "Name" "CPU%" "MEM%" "Command"
+divider
+ps aux --sort=-%cpu 2>/dev/null \
+  | awk 'NR>1 {
+      cmd = substr($0, index($0,$11))
+      if (length(cmd) > 50) cmd = substr(cmd, 1, 47) "..."
+      printf "  %-8s %-22s %-8s %-8s %s\n", $2, $11, $3, $4, cmd
+    }' \
+  | head -5
+echo ""
+
+# ── TOP 5 PROCESSES — MEMORY ──────────────────────────
+header "TOP 5 PROCESSES BY MEMORY USAGE"
+
+printf "  %-8s %-22s %-8s %-8s %s\n" "PID" "Name" "MEM%" "CPU%" "Command"
+divider
+ps aux --sort=-%mem 2>/dev/null \
+  | awk 'NR>1 {
+      cmd = substr($0, index($0,$11))
+      if (length(cmd) > 50) cmd = substr(cmd, 1, 47) "..."
+      printf "  %-8s %-22s %-8s %-8s %s\n", $2, $11, $4, $3, cmd
+    }' \
+  | head -5
+echo ""
