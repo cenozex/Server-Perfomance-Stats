@@ -56,3 +56,34 @@ printf " %-20s %s\n" "KERNEL:"          "$KERNEL"
 printf " %-20s %s\n" "ARCHITECTURE:"    "$ARCH"
 printf " %-20s %s\n" "UPTIME:"          "$UPTIME"
 printf " %-20s %s\n" "LOAD AVERAGE:"    "$LOAD"
+
+
+#CPU USAGE
+
+header "CPU USAGE"
+
+CPU_IDLE=$(top -bn1 | grep "Cpu(s)" | awk '{print $8}' | tr -d '%id,')
+#top is a basic and classic linux process monitoring tool.
+#For different top format
+
+if [ -z "$CPU_IDLE" ]; then
+CPU_IDLE=$(top -bn1 | grep "%Cpu" | awk '{print $8}')
+fi
+
+CPU_USED=$(awk "BEGIN {printf \"%.1f\", 100 - ${CPU_IDLE:-0}}")
+CPU_CORES=$(nproc 2>/dev/null || grep -c ^processor /proc/cpuinfo)
+CPU_MODEL=$(grep "model name" /proc/cpuinfo | head -1 | cut -d: -f2 | xargs)
+
+printf "  %-20s %s\n" "Model:"    "$CPU_MODEL"
+printf "  %-20s %s\n" "Cores:"    "$CPU_CORES"
+printf "  %-20s ${RED}%s%%${RESET}\n" "Usage:" "$CPU_USED"
+
+
+# Visual bar
+BAR_FILLED=$(awk "BEGIN {printf \"%d\", ${CPU_USED}/2}")
+BAR_EMPTY=$((50 - BAR_FILLED))
+printf "  %-20s [" ""; 
+printf "${RED}%0.s█${RESET}" $(seq 1 $BAR_FILLED) 2>/dev/null
+printf "%0.s░" $(seq 1 $BAR_EMPTY) 2>/dev/null
+echo "]"
+echo ""
